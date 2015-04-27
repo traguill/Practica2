@@ -13,23 +13,48 @@ namespace UnitTest
 	{
 	public:
 
-		TEST_METHOD(StackTest)
+		TEST_METHOD(Add)
 		{
-			Stack<int> lifo;
+			NodeTree<char> *a, *b, *c, *d, *e, *f, *g, *h, *i;
+			Tree<char> tree('F');
+			f = &tree.rootNode;
+			b = tree.Add('B', f);
+			g = tree.Add('G', f);
+			a = tree.Add('A', b);
+			d = tree.Add('D', b);
+			c = tree.Add('C', d);
+			e = tree.Add('E', d);
+			i = tree.Add('I', g);
+			h = tree.Add('H', i);
 
-			lifo.Push(10);
-			lifo.Push(20);
-			lifo.Push(30);
-			lifo.Push(40);
+			Assert::IsTrue(true); //We don't need to test anything because we test the add in the other methods.
 
-			Assert::AreEqual((int)lifo.Count(), 4);
-			Assert::AreEqual((int)*(lifo.Peek(1)), 20);
+		};
 
-			int result;
-			bool r = lifo.Pop(result);
+		TEST_METHOD(Clear)
+		{
+			NodeTree<char> *a, *b, *c, *d, *e, *f, *g, *h, *i;
+			Tree<char> tree('F');
+			f = &tree.rootNode;
+			b = tree.Add('B', f);
+			g = tree.Add('G', f);
+			a = tree.Add('A', b);
+			d = tree.Add('D', b);
+			c = tree.Add('C', d);
+			e = tree.Add('E', d);
+			i = tree.Add('I', g);
+			h = tree.Add('H', i);
 
-			Assert::AreEqual((int)result, 40);
-			Assert::AreEqual((int)lifo.Count(), 3);
+
+			tree.Clear();
+
+			tree.Add('A');
+			p2List<NodeTree<char>*> list;
+			tree.PostOrderIterative(&list);
+			
+
+			Assert::AreEqual((int)list.count(), 1);
+
 
 		};
 
@@ -174,12 +199,10 @@ namespace UnitTest
 			i = tree.Add('I', g);
 			h = tree.Add('H', i);
 
-
-
 			p2List<NodeTree<char>*> list;
 			tree.InOrderIterative(&list);
 
-			Assert::AreEqual((int)list.count(), 13);
+			Assert::AreEqual((int)list.count(), 9);
 			Assert::AreEqual((char)list[0]->data, 'A');
 			Assert::AreEqual((char)list[1]->data, 'B');
 			Assert::AreEqual((char)list[2]->data, 'C');
@@ -225,30 +248,8 @@ namespace UnitTest
 
 		};
 
-		TEST_METHOD(Clear)
-		{
-			NodeTree<char> *a, *b, *c, *d, *e, *f, *g, *h, *i;
-			Tree<char> tree('F');
-			f = &tree.rootNode;
-			b = tree.Add('B', f);
-			g = tree.Add('G', f);
-			a = tree.Add('A', b);
-			d = tree.Add('D', b);
-			c = tree.Add('C', d);
-			e = tree.Add('E', d);
-			i = tree.Add('I', g);
-			h = tree.Add('H', i);
+		
 
-
-			tree.Clear(f);
-
-			p2List<NodeTree<char>*> list;
-			tree.PostOrderIterative(&list);
-
-			Assert::AreEqual((int)list.count(), 0);
-
-
-		};
-
+		
 	};
 }

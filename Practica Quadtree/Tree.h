@@ -14,7 +14,7 @@ public:
 
 	NodeTree(){}
 
-	void PreOrderRecursive(p2List<NodeTree<Type>*>* list){
+	void PreOrderRecursive(p2List<NodeTree<Type>*>* list) {
 		list->add(this);
 
 		
@@ -39,16 +39,7 @@ public:
 		list->add(this);
 	}
 
-	void Clear(){
-		p2List_item<NodeTree*>* tmp = child.start;
-
-		while (tmp){
-			tmp->data->Clear();
-			tmp = tmp->next;
-		}
-
-		delete *this;
-	}
+	
 	void InOrderRecursive(p2List<NodeTree<Type>*>* list){
 
 		int firstChilds = (child.count() != 1) ? child.count()/2 : 1;
@@ -84,7 +75,7 @@ public:
 	Tree(const Type& _data){ rootNode.data = _data; rootNode.parent = NULL; }
 
 
-	NodeTree<Type>* Add(const Type& data, NodeTree<Type>* _parent = NULL){
+	NodeTree<Type>* Add(const Type& data, NodeTree<Type>* _parent){
 		NodeTree<Type>* item = new NodeTree<Type>;
 		item->data = data;
 		
@@ -141,7 +132,8 @@ public:
 		{
 			if (node != NULL)
 			{
-				stack.Push(node);
+				if (list->find(node) == -1)
+					stack.Push(node);
 				if (node->child.count() != 0)
 					node = node->child.start->data;
 				else
@@ -213,28 +205,27 @@ public:
 	void Add(const Type& _data){
 		NodeTree<Type>* item = new NodeTree<Type>;
 
-		item->parent = rootNode;
+		item->parent = &rootNode;
 		item->data = _data;
 
-		rootNode->child.add(item);
+		rootNode.child.add(item);
 
 		
 	}
 
 	void Clear(NodeTree<Type>* node = NULL){
-		p2List<NodeTree<Type>*> list;
 		if (node == NULL)
 			node = &rootNode;
-		node->PostOrderRecursive(&list);
 
-		p2List_item<NodeTree<Type>*>* tmp = list.start;
-
-		while (tmp)
+		if (node->child.start != NULL)
 		{
-			tmp->data->parent->child.del(tmp);
-
-			tmp = tmp->next;
+			for (int i = 0; i < node->child.count(); i++){
+				Clear(node->child[i]);
+			}
+			delete node;
 		}
+
+		
 	}
 
 	

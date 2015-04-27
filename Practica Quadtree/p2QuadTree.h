@@ -39,36 +39,7 @@ public:
 		for (int i = 0; i < 4; ++i)
 			if (childs[i] != NULL) delete childs[i];
 	}
-	void CutQuad(Collider* col)
-	{
-		childs[0] = new p2QuadTreeNode(SDL_Rect { rect.x, rect.y, rect.w / 2, rect.h / 2 });
-		childs[1] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y, rect.w / 2, rect.h / 2 });
-		childs[2] = new p2QuadTreeNode(SDL_Rect{ rect.x, rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
-		childs[3] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
-
-		childs[0]->parent = this;
-		childs[1]->parent = this;
-		childs[2]->parent = this;
-		childs[3]->parent = this;
-
-		for (int i = 0; i < objects.Count(); i++)
-		{
-			Insert(objects[i]);
-		}
-		objects.Clear();
-		Insert(col);
-		
-
-	}
-	bool IntersectAllChilds(Collider* col){
-		int counter = 0;
-		for (int i = 0; i < 4; i++)
-		{
-			if (Intersects(col->rect, childs[i]->rect))
-				counter++;
-		}
-		return (counter == 4) ? true : false;
-	}
+	
 	void Insert(Collider* col)
 	{
 		// TODO: Insertar un nou Collider al quadtree
@@ -90,14 +61,17 @@ public:
 			if (IntersectAllChilds(col))  
 			{
 				objects.PushBack(col);
-				return;
+				
 			}
-
-			for (int i = 0; i < 4; i++) //Put the collider in the right child
+			else
 			{
-				if (Intersects(col->rect, childs[i]->rect))
-					childs[i]->Insert(col);
+				for (int i = 0; i < 4; i++) //Put the collider in the right child
+				{
+					if (Intersects(col->rect, childs[i]->rect))
+						childs[i]->Insert(col);
+				}
 			}
+			
 		}
 			
 		
@@ -130,7 +104,6 @@ public:
 			}
 		}
 
-
 		return candidates;
 	}
 
@@ -140,6 +113,38 @@ public:
 
 		for (int i = 0; i < 4; ++i)
 			if (childs[i] != NULL) childs[i]->CollectRects(nodes);
+	}
+
+private:
+	void CutQuad(Collider* col)
+	{
+		childs[0] = new p2QuadTreeNode(SDL_Rect{ rect.x, rect.y, rect.w / 2, rect.h / 2 });
+		childs[1] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y, rect.w / 2, rect.h / 2 });
+		childs[2] = new p2QuadTreeNode(SDL_Rect{ rect.x, rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
+		childs[3] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
+
+		childs[0]->parent = this;
+		childs[1]->parent = this;
+		childs[2]->parent = this;
+		childs[3]->parent = this;
+
+		p2DynArray<Collider*> container = objects;
+		objects.Clear(); //We need to clear first because if not crashes.
+		for (int i = 0; i < container.Count(); i++)
+		{
+			Insert(container[i]);
+		}
+		Insert(col);
+
+	}
+	bool IntersectAllChilds(Collider* col)const{
+		int counter = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			if (Intersects(col->rect, childs[i]->rect))
+				counter++;
+		}
+		return (counter == 4) ? true : false;
 	}
 
 };
