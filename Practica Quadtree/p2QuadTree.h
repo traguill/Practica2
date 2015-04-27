@@ -39,7 +39,36 @@ public:
 		for (int i = 0; i < 4; ++i)
 			if (childs[i] != NULL) delete childs[i];
 	}
+	void CutQuad(Collider* col)
+	{
+		childs[0] = new p2QuadTreeNode(SDL_Rect { rect.x, rect.y, rect.w / 2, rect.h / 2 });
+		childs[1] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y, rect.w / 2, rect.h / 2 });
+		childs[2] = new p2QuadTreeNode(SDL_Rect{ rect.x, rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
+		childs[3] = new p2QuadTreeNode(SDL_Rect{ rect.x + (rect.w / 2), rect.y + (rect.h / 2), rect.w / 2, rect.h / 2 });
 
+		childs[0]->parent = this;
+		childs[1]->parent = this;
+		childs[2]->parent = this;
+		childs[3]->parent = this;
+
+		for (int i = 0; i < objects.Count(); i++)
+		{
+			Insert(objects[i]);
+		}
+		objects.Clear();
+		Insert(col);
+		
+
+	}
+	bool IntersectAllChilds(Collider* col){
+		int counter = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			if (Intersects(col->rect, childs[i]->rect))
+				counter++;
+		}
+		return (counter == 4) ? true : false;
+	}
 	void Insert(Collider* col)
 	{
 		// TODO: Insertar un nou Collider al quadtree
@@ -48,16 +77,61 @@ public:
 		// Si es talla, a de redistribuir tots els seus colliders pels nous nodes (childs) sempre que pugui
 		// Nota: un Collider pot estar a més de un node del quadtree
 		// Nota: si un Collider intersecciona als quatre childs, deixar-lo al pare
+
+		if (childs[0] == NULL) //Childs are not created.
+		{
+			if (objects.Count() >= QUADTREE_MAX_ITEMS)
+				CutQuad(col);
+			else
+				objects.PushBack(col);
+		}
+		else
+		{
+			if (IntersectAllChilds(col))  
+			{
+				objects.PushBack(col);
+				return;
+			}
+
+			for (int i = 0; i < 4; i++) //Put the collider in the right child
+			{
+				if (Intersects(col->rect, childs[i]->rect))
+					childs[i]->Insert(col);
+			}
+		}
+			
+		
+	
+
 	}
 
 	int CollectCandidates(p2DynArray<Collider*>& nodes, const SDL_Rect& r) const
 	{
+		
 		// TODO:
 		// Omplir el array "nodes" amb tots els colliders candidats
 		// de fer intersecció amb el rectangle r
 		// retornar el número de intersección calculades en el procés
 		// Nota: és una funció recursiva
-		return 0;
+
+		int candidates = 0;
+
+		for (int i = 0; i < objects.Count(); i++)
+		{
+			nodes.PushBack(objects[i]);
+			candidates++;
+		}
+		if (childs[0] != NULL)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (Intersects(childs[i]->rect, r))
+					candidates += childs[i]->CollectCandidates(nodes, r);
+			}
+		}
+
+
+		return candidates;
 	}
 
 	void CollectRects(p2DynArray<p2QuadTreeNode*>& nodes)
