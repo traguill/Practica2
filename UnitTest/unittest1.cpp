@@ -46,14 +46,12 @@ namespace UnitTest
 			h = tree.Add('H', i);
 
 
-			tree.Clear();
+			tree.Clear(b);
 
-			tree.Add('A');
 			p2List<NodeTree<char>*> list;
-			tree.PostOrderIterative(&list);
-			
+			tree.PreOrderRecursive(&list);
 
-			Assert::AreEqual((int)list.count(), 1);
+			Assert::AreEqual((int)list.count(), 4);
 
 
 		};

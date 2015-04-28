@@ -74,6 +74,16 @@ public:
 	Tree(){ rootNode = NULL; }
 	Tree(const Type& _data){ rootNode.data = _data; rootNode.parent = NULL; }
 
+	NodeTree<Type>* Add(const Type& _data){
+		NodeTree<Type>* item = new NodeTree<Type>;
+
+		item->parent = &rootNode;
+		item->data = _data;
+
+		rootNode.child.add(item);
+
+		return item;
+	}
 
 	NodeTree<Type>* Add(const Type& data, NodeTree<Type>* _parent){
 		NodeTree<Type>* item = new NodeTree<Type>;
@@ -201,31 +211,49 @@ public:
 	}
 	
 
-
-	void Add(const Type& _data){
-		NodeTree<Type>* item = new NodeTree<Type>;
-
-		item->parent = &rootNode;
-		item->data = _data;
-
-		rootNode.child.add(item);
-
-		
+	void Clear(){
+		Clear(&rootNode);
 	}
+	
 
-	void Clear(NodeTree<Type>* node = NULL){
-		if (node == NULL)
-			node = &rootNode;
+	void Clear(NodeTree<Type>* node){
 
-		if (node->child.start != NULL)
+		NodeTree<Type>* deleteNode = node;
+	
+		if (deleteNode == NULL)
+			return;
+
+		if (deleteNode->parent)
 		{
-			for (int i = 0; i < node->child.count(); i++){
-				Clear(node->child[i]);
+			if (deleteNode->child.count() != 0)
+			{
+				p2List_item<NodeTree<Type>*>* tmp = deleteNode->parent->child.start;
+				while (tmp)
+				{
+					if (tmp->data == deleteNode)
+					{
+						deleteNode->parent->child.del(tmp);
+						return;
+					}
+
+					tmp = tmp->next;
+				}
 			}
-			delete node;
+			
 		}
 
+		if (deleteNode->child.count() != 0)
+		{
+			if (deleteNode->child.end->data)
+				Clear(deleteNode->child.end->data);
+			if (deleteNode->child.start->data)
+				Clear(deleteNode->child.start->data);
+		}
 		
+			
+		
+		delete deleteNode;
+
 	}
 
 	

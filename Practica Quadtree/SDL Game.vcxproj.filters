@@ -135,4 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CodeStyle.txt">
+      <Filter>Header Files\Practica2</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
