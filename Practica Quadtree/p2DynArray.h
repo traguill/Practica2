@@ -6,6 +6,7 @@
 #define __P2DYNARRAY_H__
 
 #include <assert.h>
+#include "Globals.h"
 
 #define DYN_ARRAY_BLOCK_SIZE 16
 
@@ -140,6 +141,70 @@ public:
 		return num_elements;
 	}
 
+
+	int Bubble(){
+		int counter = 0;
+		bool done = false;
+		while (!done)
+		{
+			done = true;
+			for (int i = 0; i < num_elements -1; i++)
+			{
+				counter++;
+				if (data[i] > data[i+1]) 
+				{
+					swap(data[i], data[i + 1]);
+					done = false;
+				}
+			}
+		}
+
+		return counter;
+	}
+
+	int Bubble2(){
+		int counter = 0;
+		bool done = false;
+
+	
+		int numf= num_elements - 1;
+		int numb = 0;
+		int tmp, tmp2;
+		while (!done)
+		{
+			done = true;
+			for (int i = numb; i < numf; i++)
+			{
+				
+				counter++;
+				if (data[i] > data[i + 1])
+				{
+					swap(data[i], data[i + 1]);
+					done = false;
+					tmp = i+1;
+				}
+				
+			}
+			for (int i = numf; i > numb; i--)
+			{
+
+				counter++;
+				if (data[i] < data[i - 1])
+				{
+					swap(data[i], data[i - 1]);
+					done = false;
+					tmp2 = i - 1;
+				}
+
+			}
+			
+			numf = tmp;
+			numb = tmp2;
+		} 
+
+		return counter;
+	}
+
 private:
 	
 	// Private Utils
@@ -161,6 +226,8 @@ private:
 			delete[] tmp;
 		}
 	}
+
+	
 };
 
 #endif // __P2DYNARRAY_H__

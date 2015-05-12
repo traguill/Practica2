@@ -87,6 +87,9 @@
     <ClInclude Include="Stack.h">
       <Filter>Header Files\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="BubbleSort.h">
+      <Filter>Header Files\Practica2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">

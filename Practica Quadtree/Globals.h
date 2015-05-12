@@ -15,6 +15,14 @@ enum update_status
 	UPDATE_ERROR
 };
 
+template<class Type> void swap(Type& a, Type& b)
+{
+	Type tmp;
+	tmp = a;
+	a = b;
+	b = tmp;
+};
+
 // Configuration -----------
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
