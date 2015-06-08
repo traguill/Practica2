@@ -3,6 +3,7 @@
 
 #include "p2List.h"
 #include "Stack.h"
+#include "Qeue.h"
 
 
 template <class Type>
@@ -192,6 +193,24 @@ public:
 		}
 	}
 
+	void HorizontalIterative(p2List<NodeTree<Type>*>* list){
+		Qeue<NodeTree<Type>*> qeue;
+
+		NodeTree<Type>* node = &rootNode;
+		while (node || qeue.Pop(node))
+		{
+			list->add(node);
+			p2List_item<NodeTree<Type>*>* tmp = node->child.start;
+			while (tmp)
+			{
+				qeue.Push(tmp->data);
+				tmp = tmp->next;
+			}
+			node = NULL;
+
+		}
+
+	}
 	
 
 

@@ -246,6 +246,39 @@ namespace UnitTest
 
 		};
 
+		TEST_METHOD(HorizontalIterative)
+		{
+			NodeTree<char> *a, *b, *c, *d, *e, *f, *g, *h, *i;
+			Tree<char> tree('F');
+			f = &tree.rootNode;
+			b = tree.Add('B', f);
+			g = tree.Add('G', f);
+			a = tree.Add('A', b);
+			d = tree.Add('D', b);
+			c = tree.Add('C', d);
+			e = tree.Add('E', d);
+			i = tree.Add('I', g);
+			h = tree.Add('H', i);
+
+
+
+			p2List<NodeTree<char>*> list;
+			tree.HorizontalIterative(&list);
+
+			Assert::AreEqual((int)list.count(), 9);
+
+			Assert::AreEqual((char)list[0]->data, 'F');
+			Assert::AreEqual((char)list[1]->data, 'B');
+			Assert::AreEqual((char)list[2]->data, 'G');
+			Assert::AreEqual((char)list[3]->data, 'A');
+			Assert::AreEqual((char)list[4]->data, 'D');
+			Assert::AreEqual((char)list[5]->data, 'I');
+			Assert::AreEqual((char)list[6]->data, 'C');
+			Assert::AreEqual((char)list[7]->data, 'E');
+			Assert::AreEqual((char)list[8]->data, 'H');
+
+		};
+
 		
 
 		

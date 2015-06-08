@@ -90,6 +90,9 @@
     <ClInclude Include="BubbleSort.h">
       <Filter>Header Files\Practica2</Filter>
     </ClInclude>
+    <ClInclude Include="Qeue.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
